@@ -28,6 +28,15 @@
     "active": true,
     "targets": ["nsis"],
     "shortDescription": "A lightweight, private desktop office workspace",
-    "longDescription": "OrbOffice is a local-first desktop office suite. Documents are stored on the user's device."
+    "longDescription": "OrbOffice is a local-first desktop office suite. Documents are stored on the user's device.",
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "displayLanguageSelector": true,
+        "languages": ["English", "Turkish"],
+        "startMenuFolder": "Orb Technologies",
+        "compression": "lzma"
+      }
+    }
   }
 }
