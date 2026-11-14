@@ -1,1 +1,65 @@
 # OrbOffice
+
+A lightweight, local-first desktop office workspace by Orb Technologies.
+
+OrbOffice is a native desktop application, not a hosted website. Its first milestone establishes the desktop shell and private document workspace before the writing, spreadsheet, and presentation modules are built one at a time.
+
+## Current milestone: desktop shell and workspace
+
+- Native desktop window powered by Tauri 2.
+- Plain HTML, CSS, and JavaScript frontend. No React, Vue, Vite, or runtime frontend framework.
+- Local workspace stored in the operating system's application-data directory.
+- Create, list, preview, rename, import, and delete OrbOffice documents.
+- Import uses a native file picker and creates a private copy in the OrbOffice workspace. The selected source file is not modified.
+- No account, cloud sync, telemetry, or application server.
+- A 16 MB document limit protects the initial workspace from accidentally loading very large files.
+
+## Why Orb! is not in the first shell
+
+Orb! is a real part of the Orb ecosystem and remains a candidate for the document-processing core. The first milestone needs mature native window, file-dialog, and operating-system integration. Orb!'s current Windows system layer is still experimental and does not yet provide a complete desktop GUI API.
+
+Using Orb! for these operations today would add risk without reducing complexity. The plan is to introduce Orb! where it provides real value in later document-processing modules, rather than adding it as a decorative dependency.
+
+## Build on Windows
+
+Requirements:
+
+- Windows 10 or 11
+- Rust 1.90 or newer
+- Node.js 22 or newer
+- Microsoft C++ Build Tools
+- WebView2 Runtime
+
+Install development dependencies:
+
+    npm install
+
+Run the desktop application:
+
+    npm run dev
+
+Build the Windows installer:
+
+    npm run build
+
+For a compile-only build without creating an installer:
+
+    npm run build -- --no-bundle
+
+## Document format
+
+The initial .orbdoc format is UTF-8 JSON with a format identifier and version number. It is intentionally simple for the first milestone and will be evolved with explicit versioned migrations as the Writer module is developed.
+
+Documents are stored under OrbOffice's application-data directory in a documents subfolder. The app only accepts document IDs matching its generated identifier format when reading, renaming, or deleting workspace files.
+
+## Project structure
+
+    frontend/                Static desktop interface
+    src-tauri/               Tauri application and local file commands
+      capabilities/          Window permissions
+      src/main.rs            Workspace operations
+    .github/workflows/       Windows compile check
+
+## Status
+
+Early development. This milestone is a workspace foundation, not yet a full word processor. The document editor and Office-format compatibility are separate future milestones.
