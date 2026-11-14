@@ -27,6 +27,9 @@ jobs:
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Check frontend JavaScript syntax
+        run: node --check frontend/main.js
+
       - name: Install Tauri CLI
         run: npm install
 

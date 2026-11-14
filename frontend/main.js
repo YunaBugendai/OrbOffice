@@ -3,7 +3,7 @@ const invoke = (...args) => {
   if (!api) throw new Error("OrbOffice must be run as a desktop application.");
   return api(...args);
 };
-const state = { documents:[], renameTarget:null, deleteTarget:null, activeDocument:null, dirty:false, saveTimer:null, saving:null, toastTimer:null };
+const state = { documents:[], renameTarget:null, deleteTarget:null, activeDocument:null, dirty:false, saveTimer:null, saving:null, saveFailed:false, toastTimer:null };
 const el = {
   count:document.querySelector("#document-count"), sideCount:document.querySelector("#sidebar-count"),
   list:document.querySelector("#documents-container"), search:document.querySelector("#search-input"),
@@ -68,7 +68,7 @@ function updateWordCount() {
 }
 function markDirty() {
   if (!state.activeDocument) return;
-  state.dirty=true; saveStatus("Unsaved changes"); updateWordCount();
+  state.dirty=true; state.saveFailed=false; saveStatus("Unsaved changes"); updateWordCount();
   clearTimeout(state.saveTimer);
   state.saveTimer=setTimeout(()=>saveDocument(),1000);
 }
@@ -89,7 +89,7 @@ async function openWriter(id) {
   try {
     const item=await invoke("read_document",{id});
     clearTimeout(state.saveTimer);
-    state.activeDocument=item; state.dirty=false;
+    state.activeDocument=item; state.dirty=false; state.saveFailed=false;
     el.title.value=item.title; el.editor.innerHTML=cleanHtml(item.content);
     updateWordCount(); saveStatus("Saved");
     el.workspace.hidden=true; el.writer.hidden=false;
@@ -101,7 +101,7 @@ async function saveDocument() {
   clearTimeout(state.saveTimer);
   if (state.saving) {
     await state.saving;
-    if (state.dirty) return saveDocument();
+    if (state.dirty && !state.saveFailed) return saveDocument();
     return;
   }
   const title=el.title.value.trim(), content=cleanHtml(el.editor.innerHTML);
@@ -111,14 +111,14 @@ async function saveDocument() {
   state.saving=invoke("update_document",{id,title,content}).then(async updated=>{
     state.activeDocument={...state.activeDocument,...updated,title,content};
     if (el.title.value.trim()===title && cleanHtml(el.editor.innerHTML)===content) {
-      state.dirty=false; saveStatus("Saved");
+      state.dirty=false; state.saveFailed=false; saveStatus("Saved");
     } else {
       state.dirty=true; saveStatus("Unsaved changes");
       state.saveTimer=setTimeout(()=>saveDocument(),300);
     }
     await loadDocuments(false);
   }).catch(error=>{
-    state.dirty=true; saveStatus("Save failed",true); toast("Could not save document: "+error);
+    state.dirty=true; state.saveFailed=true; saveStatus("Save failed",true); toast("Could not save document: "+error);
   }).finally(()=>{state.saving=null;});
   await state.saving;
 }
