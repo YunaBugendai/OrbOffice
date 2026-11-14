@@ -218,6 +218,29 @@ fn delete_document(app: AppHandle, id: String) -> Result<(), String> {
     fs::remove_file(path).map_err(|error| format!("Could not delete the document: {error}"))
 }
 
+#[tauri::command]
+fn update_document(
+    app: AppHandle,
+    id: String,
+    title: String,
+    content: String,
+) -> Result<DocumentSummary, String> {
+    let title = title.trim();
+    if title.is_empty() || title.chars().count() > 80 || title.chars().any(char::is_control) {
+        return Err("Use a name between 1 and 80 characters without control characters.".to_string());
+    }
+    let path = document_path(&app, &id)?;
+    let mut document = read_document_file(&path)?;
+    if document.id != id {
+        return Err("The document identifier does not match its file.".to_string());
+    }
+    document.title = title.to_string();
+    document.content = content;
+    document.modified_at = now_millis();
+    write_document_file(&path, &document)?;
+    Ok(summarize(&document, &path))
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
@@ -226,6 +249,7 @@ fn main() {
             create_document,
             import_document,
             read_document,
+            update_document,
             rename_document,
             delete_document
         ])

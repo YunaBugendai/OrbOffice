@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "OrbOffice",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "identifier": "com.orbtechnologies.orboffice",
   "build": {
     "frontendDist": "../frontend"
@@ -37,13 +37,30 @@
         "displayLanguageSelector": true,
         "languages": [
           "English",
-          "Turkish"
+          "Turkish",
+          "German",
+          "French",
+          "Spanish",
+          "SpanishInternational",
+          "Italian",
+          "Dutch",
+          "Arabic",
+          "Hebrew",
+          "Japanese",
+          "Korean",
+          "PortugueseBR",
+          "Russian",
+          "SimpChinese",
+          "TradChinese",
+          "Farsi",
+          "Bulgarian"
         ],
         "startMenuFolder": "Orb Technologies",
         "compression": "lzma",
         "installerIcon": "icons/icon.ico",
         "uninstallerIcon": "icons/icon.ico"
-      }
+      },
+      "allowDowngrades": false
     },
     "icon": [
       "icons/icon.ico"

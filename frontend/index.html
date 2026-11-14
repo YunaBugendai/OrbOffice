@@ -30,6 +30,10 @@
           <span>My documents</span>
           <span class="nav-count" id="sidebar-count">0</span>
         </button>
+        <button class="nav-item" type="button" data-view="write">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l11-11a2.1 2.1 0 0 0-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg>
+          <span>Orb Write</span>
+        </button>
       </div>
 
       <div class="sidebar-bottom">
@@ -50,7 +54,7 @@
         </div>
       </header>
 
-      <div class="page-content">
+      <div class="page-content" id="workspace-page">
         <section class="page-heading" id="overview-heading">
           <div>
             <p class="eyebrow">YOUR PRIVATE WORKSPACE</p>
@@ -99,6 +103,48 @@
 
         <footer class="page-footer"><span>Early development. Your workspace is stored locally on this device.</span><span>ORB TECHNOLOGIES</span></footer>
       </div>
+      <section class="writer-page" id="writer-page" hidden aria-label="Orb Write editor">
+        <div class="writer-heading">
+          <div>
+            <p class="eyebrow">ORB OFFICE · WRITING</p>
+            <h1>Orb Write</h1>
+            <p class="page-subtitle">A focused local writing space. Changes are saved to this device.</p>
+          </div>
+          <div class="writer-heading-actions">
+            <span class="save-state" id="save-state" role="status">Saved</span>
+            <button class="button button-secondary" id="writer-back-button" type="button">Back to workspace</button>
+            <button class="button button-primary" id="writer-save-button" type="button">Save document</button>
+          </div>
+        </div>
+        <div class="writer-title-row">
+          <label class="sr-only" for="writer-title">Document title</label>
+          <input id="writer-title" class="writer-title" maxlength="80" value="Untitled document">
+          <span class="writer-count" id="writer-count">0 words · 0 characters</span>
+        </div>
+        <div class="writer-toolbar" role="toolbar" aria-label="Text formatting">
+          <button type="button" data-command="bold" title="Bold"><strong>B</strong></button>
+          <button type="button" data-command="italic" title="Italic"><em>I</em></button>
+          <button type="button" data-command="underline" title="Underline"><u>U</u></button>
+          <span class="toolbar-divider"></span>
+          <button type="button" data-command="formatBlock" data-value="h1" title="Heading 1">H1</button>
+          <button type="button" data-command="formatBlock" data-value="h2" title="Heading 2">H2</button>
+          <span class="toolbar-divider"></span>
+          <button type="button" data-command="insertUnorderedList" title="Bulleted list">• List</button>
+          <button type="button" data-command="insertOrderedList" title="Numbered list">1. List</button>
+          <button type="button" data-command="formatBlock" data-value="blockquote" title="Quote">Quote</button>
+          <span class="toolbar-divider"></span>
+          <button type="button" data-command="undo" title="Undo">↶</button>
+          <button type="button" data-command="redo" title="Redo">↷</button>
+        </div>
+        <div class="writer-paper">
+          <div id="writer-editor" class="writer-editor" contenteditable="true" role="textbox"
+            aria-label="Document content" aria-multiline="true" spellcheck="true" data-placeholder="Start writing…"></div>
+        </div>
+        <div class="writer-footer">
+          <span>Stored locally in your OrbOffice workspace</span>
+          <span>Ctrl + S to save</span>
+        </div>
+      </section>
     </main>
   </div>
 
