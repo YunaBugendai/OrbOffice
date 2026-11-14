@@ -3,23 +3,48 @@ name: Desktop build
 on:
   push:
     branches: [main]
+    tags:
+      - "v*"
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   windows:
-    name: Windows x64
+    name: Windows x64 installer
     runs-on: windows-latest
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
+
       - name: Install Tauri CLI
         run: npm install
-      - name: Compile desktop application
-        run: npm run build -- --no-bundle
+
+      - name: Build Windows setup wizard
+        run: npm run build
+
+      - name: Upload installer for this build
+        uses: actions/upload-artifact@v4
+        with:
+          name: OrbOffice-Windows-x64-installer
+          path: src-tauri/target/release/bundle/nsis/*-setup.exe
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish installer to GitHub Releases
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: OrbOffice \${{ github.ref_name }}
+          generate_release_notes: true
+          files: src-tauri/target/release/bundle/nsis/*-setup.exe
